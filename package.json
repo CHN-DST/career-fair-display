@@ -1,0 +1,12 @@
+{
+  "name": "career-fair-display",
+  "version": "1.0.0",
+  "description": "招聘会数据展示系统 - 美观的招聘会实时数据大屏",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["career-fair", "dashboard", "job-fair", "recruitment"],
+  "license": "MIT"
+}

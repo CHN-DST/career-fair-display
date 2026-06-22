@@ -1,0 +1,76 @@
+{
+  "fairInfo": {
+    "id": 17,
+    "name": "2026 链接未来春季综合双选招聘会",
+    "date": "2026-06-22",
+    "location": "新微西部（成都）创新中心",
+    "totalJobFairs": 8,
+    "totalCompanies": 156,
+    "totalAttendees": 2340,
+    "totalAppointments": 892,
+    "checkinRate": 72.5
+  },
+  "schools": [
+    { "name": "浙江大学", "count": 385 },
+    { "name": "杭州电子科技大学", "count": 312 },
+    { "name": "浙江工业大学", "count": 278 },
+    { "name": "浙江理工大学", "count": 245 },
+    { "name": "中国计量大学", "count": 198 },
+    { "name": "浙江工商大学", "count": 187 },
+    { "name": "杭州师范大学", "count": 165 },
+    { "name": "浙江财经大学", "count": 142 },
+    { "name": "浙江中医药大学", "count": 128 },
+    { "name": "温州大学", "count": 105 },
+    { "name": "宁波大学", "count": 95 },
+    { "name": "嘉兴学院", "count": 68 },
+    { "name": "湖州师范学院", "count": 52 },
+    { "name": "绍兴文理学院", "count": 38 },
+    { "name": "台州学院", "count": 22 }
+  ],
+  "majors": [
+    { "name": "计算机科学与技术", "count": 342 },
+    { "name": "软件工程", "count": 298 },
+    { "name": "电子信息工程", "count": 256 },
+    { "name": "通信工程", "count": 218 },
+    { "name": "自动化", "count": 195 },
+    { "name": "机械工程", "count": 178 },
+    { "name": "会计学", "count": 165 },
+    { "name": "金融学", "count": 152 },
+    { "name": "市场营销", "count": 138 },
+    { "name": "工商管理", "count": 125 },
+    { "name": "英语", "count": 98 },
+    { "name": "法学", "count": 72 },
+    { "name": "数学与应用数学", "count": 65 },
+    { "name": "生物工程", "count": 48 },
+    { "name": "环境工程", "count": 35 }
+  ],
+  "industries": [
+    { "name": "互联网/IT", "count": 42, "color": "#6366f1" },
+    { "name": "金融/保险", "count": 28, "color": "#8b5cf6" },
+    { "name": "制造业", "count": 22, "color": "#06b6d4" },
+    { "name": "教育/培训", "count": 18, "color": "#10b981" },
+    { "name": "医疗/健康", "count": 14, "color": "#f59e0b" },
+    { "name": "房地产/建筑", "count": 10, "color": "#ef4444" },
+    { "name": "传媒/广告", "count": 8, "color": "#ec4899" },
+    { "name": "零售/电商", "count": 7, "color": "#14b8a6" },
+    { "name": "物流/运输", "count": 5, "color": "#f97316" },
+    { "name": "能源/环保", "count": 2, "color": "#84cc16" }
+  ],
+  "locations": [
+    { "name": "成都", "count": 45 },
+    { "name": "北京", "count": 28 },
+    { "name": "上海", "count": 25 },
+    { "name": "深圳", "count": 18 },
+    { "name": "杭州", "count": 16 },
+    { "name": "广州", "count": 12 },
+    { "name": "南京", "count": 7 },
+    { "name": "武汉", "count": 5 }
+  ],
+  "companyTypes": [
+    { "name": "民营企业", "count": 68, "color": "#6366f1" },
+    { "name": "国有企业", "count": 32, "color": "#f59e0b" },
+    { "name": "外资企业", "count": 26, "color": "#06b6d4" },
+    { "name": "合资企业", "count": 18, "color": "#10b981" },
+    { "name": "上市公司", "count": 12, "color": "#ef4444" }
+  ]
+}

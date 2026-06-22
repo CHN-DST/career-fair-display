@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026年链接未来春季综合双选招聘会 | 数据大屏</title>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --font: 'Inter','Noto Sans SC',-apple-system,BlinkMacSystemFont,sans-serif;
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px;
+  --t: 0.3s cubic-bezier(0.4,0,0.2,1);
+  --glass: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.10);
+  --txt: #f0f4ff; --txt2: rgba(240,244,255,0.72); --txt3: rgba(240,244,255,0.42);
+  --a1: #22d3ee; --a2: #a78bfa; --a3: #38bdf8; --s: #34d399; --w: #fbbf24;
+  --glow-1: 0 0 12px rgba(34,211,238,.25); --glow-2: 0 0 10px rgba(167,139,250,.20);
+  --gap: 7px;
+}
+body.theme-blue  { --bg:linear-gradient(135deg,#162240,#1e3060 30%,#1c3a70 60%,#142040); --ol:radial-gradient(ellipse at 20% 50%,rgba(34,211,238,.10),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(56,189,248,.07),transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(167,139,250,.05),transparent 50%); }
+body.theme-purple { --bg:linear-gradient(135deg,#281840,#3a2860 30%,#302870 60%,#201840); --ol:radial-gradient(ellipse at 20% 50%,rgba(167,139,250,.12),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(192,132,252,.08),transparent 50%),radial-gradient(ellipse at 60% 80%,rgba(34,211,238,.05),transparent 50%); }
+body.theme-emerald { --bg:linear-gradient(135deg,#0a2828,#104a40 30%,#0e5245 60%,#082422); --ol:radial-gradient(ellipse at 20% 50%,rgba(52,211,153,.10),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(34,211,238,.06),transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(52,211,153,.04),transparent 50%); }
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:var(--font);color:var(--txt);
+  background:var(--bg);-webkit-font-smoothing:antialiased;
+  transition:background .8s;
+}
+body::before{content:'';position:fixed;inset:0;background:var(--ol);pointer-events:none;z-index:0}
+/* Tech grid overlay */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.03;
+  background-image:radial-gradient(circle,rgba(255,255,255,.3) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+/* ===== FULL VIEWPORT LAYOUT ===== */
+.app-container{
+  position:relative;z-index:1;
+  width:100%;height:100vh;
+  display:grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr;
+  padding:5px 10px 5px;gap:5px;
+}
+
+/* ===== HEADER ===== */
+.header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:7px 16px;gap:12px;position:relative;
+  background:linear-gradient(180deg,rgba(34,211,238,.03) 0%,rgba(255,255,255,.03) 50%,rgba(167,139,250,.02) 100%);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.08);border-radius:var(--r-lg);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 2px 20px rgba(0,0,0,.3);
+}
+/* Top accent line */
+.header::before{content:'';position:absolute;top:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(34,211,238,.35),transparent)}
+.header-left{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.header-center{text-align:center;flex:1}
+.header-title{font-size:1.65rem;font-weight:900;letter-spacing:.05em;line-height:1.1;text-shadow:0 0 30px rgba(34,211,238,.15)}
+.header-subtitle{font-size:.66rem;color:var(--txt2);letter-spacing:.04em}
+.header-right{display:flex;align-items:center;gap:6px;flex-shrink:0;min-width:140px;justify-content:flex-end}
+
+.live-tag{font-size:.78rem;color:var(--txt2);display:flex;align-items:center;gap:6px;font-weight:500;min-width:135px;justify-content:flex-end;letter-spacing:.02em}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--s);animation:pulse 2s infinite;box-shadow:0 0 8px var(--s)}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 8px var(--s)}50%{opacity:.4;box-shadow:0 0 2px var(--s)}}
+
+/* Compact stat cards */
+.stat-card{
+  padding:3px 9px;display:flex;align-items:center;gap:7px;transition:var(--t);
+  white-space:nowrap;border-radius:8px;position:relative;
+}
+.stat-card:hover{background:rgba(255,255,255,.03)}
+.stat-icon{width:28px;height:28px;border-radius:6px;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative}
+.stat-icon::after{content:'';position:absolute;inset:-1px;border-radius:7px;opacity:0;transition:opacity .3s}
+.stat-card:hover .stat-icon::after{opacity:1}
+.stat-icon.c1{background:rgba(34,211,238,.15);color:#67e8f9;box-shadow:inset 0 0 6px rgba(34,211,238,.1)}
+.stat-icon.c1::after{box-shadow:0 0 8px rgba(34,211,238,.3)}
+.stat-icon.c2{background:rgba(52,211,153,.15);color:#6ee7b7;box-shadow:inset 0 0 6px rgba(52,211,153,.1)}
+.stat-icon.c2::after{box-shadow:0 0 8px rgba(52,211,153,.3)}
+.stat-icon.c3{background:rgba(56,189,248,.15);color:#7dd3fc;box-shadow:inset 0 0 6px rgba(56,189,248,.1)}
+.stat-icon.c3::after{box-shadow:0 0 8px rgba(56,189,248,.3)}
+.stat-value{font-size:1rem;font-weight:800;line-height:1.1;letter-spacing:.02em;font-variant-numeric:tabular-nums;font-family:'SF Mono','Cascadia Code','JetBrains Mono',monospace}
+.stat-label{font-size:.56rem;color:var(--txt3);letter-spacing:.03em;text-transform:uppercase}
+
+/* ===== MAIN BODY - grid areas ===== */
+.main-body{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  grid-template-rows:auto 1fr 1fr;
+  grid-template-areas:
+    "industry   companies  attendee"
+    "industry   companies  dist"
+    "location   nature     carousel";
+  gap:var(--gap);min-height:0;
+}
+
+/* Assign each panel to its area */
+.panel-dist{grid-area:dist}
+.panel-attendee{grid-area:attendee}
+.panel-companies{grid-area:companies}
+.panel-carousel{grid-area:carousel}
+.panel-industry{grid-area:industry}
+.panel-location{grid-area:location}
+.panel-nature{grid-area:nature}
+
+/* ===== PANEL STYLES ===== */
+.panel{
+  background:linear-gradient(160deg,rgba(255,255,255,.06) 0%,rgba(255,255,255,.045) 50%,rgba(255,255,255,.03) 100%);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.06);border-radius:var(--r-md);
+  display:flex;flex-direction:column;overflow:hidden;min-height:0;position:relative;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03),0 4px 24px rgba(0,0,0,.25);
+  transition:box-shadow .4s,border-color .4s;
+}
+.panel:hover{border-color:rgba(255,255,255,.1);box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 8px 32px rgba(0,0,0,.35),0 0 0 1px rgba(34,211,238,.04)}
+/* Corner accents */
+.panel::before,.panel::after{content:'';position:absolute;width:16px;height:16px;pointer-events:none;opacity:.25;transition:opacity .4s;z-index:2}
+.panel:hover::before,.panel:hover::after{opacity:.5}
+.panel::before{top:-1px;left:-1px;border-top:1.5px solid rgba(34,211,238,.4);border-left:1.5px solid rgba(34,211,238,.4);border-radius:var(--r-md) 0 0 0}
+.panel::after{bottom:-1px;right:-1px;border-bottom:1.5px solid rgba(167,139,250,.4);border-right:1.5px solid rgba(167,139,250,.4);border-radius:0 0 var(--r-md) 0}
+.panel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:5px 11px;flex-shrink:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));
+  border-bottom:1px solid rgba(255,255,255,.04);gap:6px;
+}
+.panel-title{font-size:.74rem;font-weight:600;display:flex;align-items:center;gap:6px;letter-spacing:.02em}
+.panel-dot{width:5px;height:5px;border-radius:50%;background:var(--a1);flex-shrink:0;box-shadow:0 0 6px var(--a1)}
+.panel-body{flex:1;min-height:0;padding:4px 9px;display:flex;flex-direction:column;overflow:hidden}
+
+/* ===== Distribution Chart ===== */
+.dist-chart{width:100%;flex:1;min-height:0}
+
+/* ===== Attendee ===== */
+.attendee-number{font-size:2.2rem;font-weight:900;letter-spacing:-.02em;line-height:.9;background:linear-gradient(135deg,var(--a1) 0%,#67e8f9 50%,var(--a2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 12px rgba(34,211,238,.3));font-family:'SF Mono','Cascadia Code','JetBrains Mono',monospace}
+.attendee-label{font-size:.6rem;color:var(--txt2);margin-top:2px;font-weight:500;letter-spacing:.04em}
+
+/* ===== Industry Chart ===== */
+.industry-chart{width:100%;flex:1;min-height:0}
+.industry-detail-panel,.detail-panel{display:none;flex-direction:column;flex:1;min-height:0;overflow:hidden}
+.industry-detail-panel.show,.detail-panel.show{display:flex}
+.industry-chart-panel,.chart-panel{display:flex;flex-direction:column;flex:1;min-height:0}
+.industry-chart-panel.hide,.chart-panel.hide{display:none}
+.detail-back{font-size:.62rem;color:var(--a1);cursor:pointer;padding:2px 8px;border-radius:8px;transition:var(--t);letter-spacing:.02em}
+.detail-back:hover{background:rgba(34,211,238,.08);text-shadow:0 0 8px rgba(34,211,238,.3)}
+.detail-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
+.detail-list::-webkit-scrollbar{width:3px}
+.detail-list::-webkit-scrollbar-thumb{background:rgba(34,211,238,.15);border-radius:6px}
+.detail-item{display:flex;align-items:center;gap:8px;padding:5px 9px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.03);border-radius:var(--r-sm);transition:var(--t)}
+.detail-item:hover{background:rgba(34,211,238,.06);border-color:rgba(34,211,238,.1)}
+.detail-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;box-shadow:0 0 4px currentColor}
+.detail-name{font-size:.68rem;font-weight:600;flex:1}
+.detail-booth{font-size:.58rem;color:var(--a1);background:rgba(34,211,238,.06);padding:1px 6px;border-radius:5px;border:1px solid rgba(34,211,238,.08)}
+
+.chart-toggle{display:flex;background:rgba(255,255,255,.04);border-radius:10px;padding:1px;gap:1px;margin-left:6px;border:1px solid rgba(255,255,255,.04)}
+.chart-toggle-btn{padding:2px 9px;border-radius:9px;border:none;background:transparent;color:var(--txt2);cursor:pointer;font-size:.6rem;font-weight:500;transition:var(--t);white-space:nowrap;font-family:var(--font);letter-spacing:.01em}
+.chart-toggle-btn.active{background:var(--a1);color:#0a0f1a;box-shadow:0 0 10px rgba(34,211,238,.25)}
+.chart-toggle-btn:not(.active):hover{color:#fff}
+
+/* ===== Carousel ===== */
+.carousel-container{position:relative;flex:1;overflow:hidden;border-radius:var(--r-sm)}
+.carousel-track{animation:scrollUp var(--carousel-speed,100s) linear infinite}
+.carousel-track:hover{animation-play-state:paused}
+@keyframes scrollUp{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
+.carousel-item{display:flex;align-items:center;gap:8px;padding:4px 9px;margin-bottom:2px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.02);border-radius:var(--r-sm);transition:var(--t)}
+.carousel-item:hover{background:rgba(34,211,238,.06);border-color:rgba(34,211,238,.12);box-shadow:0 0 12px rgba(34,211,238,.06)}
+.carousel-avatar{width:26px;height:26px;border-radius:50%;font-size:.66rem;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0;box-shadow:0 0 6px rgba(255,255,255,.1)}
+.carousel-info{flex:1;min-width:0}
+.carousel-name{font-size:.7rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.carousel-detail{font-size:.62rem;color:var(--txt3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.carousel-time{font-size:.62rem;color:var(--txt3);white-space:nowrap;flex-shrink:0;font-variant-numeric:tabular-nums}
+
+/* ===== Company Scroll ===== */
+.company-scroll-container{position:relative;flex:1;overflow:hidden;border-radius:var(--r-sm)}
+.company-scroll-track{animation:scrollDown var(--company-speed,120s) linear infinite}
+.company-scroll-track:hover{animation-play-state:paused}
+@keyframes scrollDown{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
+.company-scroll-card{display:flex;align-items:center;gap:7px;padding:5px 9px;margin-bottom:3px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.03);border-radius:var(--r-sm);transition:var(--t)}
+.company-scroll-card:hover{background:rgba(167,139,250,.06);border-color:rgba(167,139,250,.12);box-shadow:0 0 12px rgba(167,139,250,.06)}
+.company-scroll-logo{width:26px;height:26px;border-radius:6px;font-size:.64rem;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0;box-shadow:0 0 8px rgba(255,255,255,.08)}
+.company-scroll-info{flex:1;min-width:0}
+.company-scroll-name{font-size:.68rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.company-scroll-name:hover{overflow:visible;white-space:normal}
+.company-scroll-meta{font-size:.58rem;color:var(--txt3);display:flex;gap:5px}
+.company-scroll-booth{font-size:.58rem;color:var(--a1);font-weight:500;flex-shrink:0;padding:1px 6px;background:rgba(34,211,238,.06);border-radius:5px;border:1px solid rgba(34,211,238,.1)}
+
+/* Speed control */
+.speed-control{display:flex;align-items:center;gap:4px}
+.speed-label{font-size:.55rem;color:var(--txt3);white-space:nowrap;letter-spacing:.02em}
+.speed-slider{-webkit-appearance:none;width:60px;height:3px;background:rgba(255,255,255,.08);border-radius:2px;outline:none;cursor:pointer}
+.speed-slider::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:var(--a1);cursor:pointer;box-shadow:0 0 8px var(--a1);transition:box-shadow .3s}
+.speed-slider::-webkit-slider-thumb:hover{box-shadow:0 0 14px var(--a1)}
+.speed-val{font-size:.55rem;color:var(--txt3);min-width:26px;text-align:center;font-variant-numeric:tabular-nums}
+
+/* Toggle */
+.toggle-group{display:flex;background:rgba(255,255,255,.04);border-radius:10px;padding:1px;gap:1px;border:1px solid rgba(255,255,255,.04)}
+.toggle-btn{padding:3px 10px;border-radius:9px;border:none;background:transparent;color:var(--txt2);cursor:pointer;font-size:.62rem;font-weight:500;transition:var(--t);white-space:nowrap;font-family:var(--font);letter-spacing:.01em}
+.toggle-btn.active{background:var(--a1);color:#0a0f1a;box-shadow:0 0 10px rgba(34,211,238,.2)}
+.toggle-btn:not(.active):hover{color:#fff}
+
+/* Background controls */
+.bg-ctrl{display:flex;align-items:center;gap:4px;flex-shrink:0;position:relative}
+.bg-btn{width:24px;height:24px;border-radius:50%;border:2px solid rgba(255,255,255,.15);cursor:pointer;transition:var(--t);flex-shrink:0;padding:0;box-shadow:0 0 6px rgba(0,0,0,.3)}
+.bg-btn:hover{border-color:rgba(34,211,238,.5);transform:scale(1.1);box-shadow:0 0 12px rgba(34,211,238,.15)}
+.bg-btn.active{border-color:var(--a1);box-shadow:0 0 12px rgba(34,211,238,.3)}
+.bg-palette{display:none;position:fixed;top:auto;left:auto;margin-top:6px;background:rgba(6,11,24,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-md);padding:8px;gap:5px;flex-wrap:wrap;width:168px;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,.5),0 0 0 1px rgba(34,211,238,.05)}
+.bg-palette.show{display:flex}
+.bg-palette-color{width:20px;height:20px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:var(--t)}
+.bg-palette-color:hover{border-color:#fff;transform:scale(1.15);box-shadow:0 0 10px currentColor}
+.bg-custom-input{width:0;height:0;position:absolute;opacity:0;pointer-events:none}
+.bg-remove{font-size:.52rem;color:var(--txt3);cursor:pointer;text-align:center;width:100%;padding:2px 0;transition:var(--t);letter-spacing:.02em}
+.bg-remove:hover{color:#ef4444;text-shadow:0 0 6px rgba(239,68,68,.3)}
+</style>
+</head>
+<body class="theme-blue">
+
+<div class="app-container">
+  <!-- ===== HEADER: stats(left) + title(center) + controls(right) ===== -->
+  <header class="header">
+    <div class="header-left">
+      <div class="stat-card"><div class="stat-icon c1">💼</div><div><div class="stat-value" id="statPositions">--</div><div class="stat-label">岗位总数</div></div></div>
+      <div class="stat-card"><div class="stat-icon c3">🧑‍💼</div><div><div class="stat-value" id="statRecruits">--</div><div class="stat-label">招聘人数</div></div></div>
+      <div class="stat-card"><div class="stat-icon c2">🏢</div><div><div class="stat-value" id="statCompanies">--</div><div class="stat-label">参会企业数</div></div></div>
+      <div class="bg-ctrl">
+        <button class="bg-btn" id="bgToggle" title="背景颜色" style="background:linear-gradient(135deg,#6366f1,#06b6d4)"></button>
+      </div>
+    </div>
+    <div class="header-center">
+      <div class="header-title" id="fairName">2026年链接未来春季综合双选招聘会</div>
+      <div class="header-subtitle" id="fairInfo"></div>
+    </div>
+    <div class="header-right">
+      <span class="live-tag"><span class="live-dot"></span>实时 · <span id="updateTime">--</span></span>
+    </div>
+  </header>
+
+  <!-- ===== MAIN BODY: grid-template-areas ===== -->
+  <div class="main-body">
+    <!-- [area: dist] 签到分布 (right middle) -->
+    <div class="panel panel-dist">
+      <div class="panel-header">
+        <div class="panel-title"><span class="panel-dot"></span>签到分布</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="toggle-group" id="distToggle">
+            <button class="toggle-btn active" data-mode="school">学校</button>
+            <button class="toggle-btn" data-mode="major">专业</button>
+          </div>
+          <div class="chart-toggle" id="distChartToggle">
+            <button class="chart-toggle-btn active" data-type="bar">柱状</button>
+            <button class="chart-toggle-btn" data-type="pie">饼图</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body"><div class="dist-chart" id="distChart"></div></div>
+    </div>
+
+    <!-- [area: attendee] 签到人数 (right top, compact) -->
+    <div class="panel panel-attendee">
+      <div class="panel-body" style="display:flex;align-items:center;justify-content:center;padding:6px 12px">
+        <div style="text-align:center">
+          <div class="attendee-number" id="attendeeCount">--</div>
+          <div class="attendee-label">人 已到场签到</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- [area: companies] 全部参会企业 (right middle, continuous scroll) -->
+    <div class="panel panel-companies">
+      <div class="panel-header">
+        <div class="panel-title"><span class="panel-dot" style="background:var(--w)"></span>全部参会企业 <span style="font-size:.64rem;color:var(--txt3);font-weight:400" id="companyCount"></span></div>
+        <div class="speed-control">
+          <span class="speed-label">速度</span>
+          <input type="range" class="speed-slider" id="companySpeed" min="20" max="360" value="120" step="5">
+          <span class="speed-val" id="companySpeedVal">120s</span>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top:2px">
+        <div class="company-scroll-container"><div class="company-scroll-track" id="companyScrollTrack"></div></div>
+      </div>
+    </div>
+
+    <!-- [area: carousel] 学生签到 (right bottom) -->
+    <div class="panel panel-carousel">
+      <div class="panel-header">
+        <div class="panel-title"><span class="panel-dot" style="background:var(--s)"></span>学生签到</div>
+        <div class="speed-control">
+          <span class="speed-label">速度</span>
+          <input type="range" class="speed-slider" id="carouselSpeed" min="20" max="240" value="100" step="5">
+          <span class="speed-val" id="carouselSpeedVal">100s</span>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-top:2px">
+        <div class="carousel-container"><div class="carousel-track" id="carouselTrack"></div></div>
+      </div>
+    </div>
+
+    <!-- [area: location] 公司地点分布 (left bottom) -->
+    <div class="panel panel-location">
+      <div class="panel-header">
+        <div class="panel-title"><span class="panel-dot" style="background:var(--a2)"></span>公司地点分布</div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <span style="font-size:.58rem;color:var(--txt3)" id="locationTotal"></span>
+          <div class="chart-toggle" id="locationChartToggle">
+            <button class="chart-toggle-btn active" data-type="pie">饼图</button>
+            <button class="chart-toggle-btn" data-type="bar">柱状</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="chart-panel" id="locationChartPanel">
+          <div class="dist-chart" id="locationChart"></div>
+          <div style="font-size:.55rem;color:var(--txt3);text-align:center;padding:1px 0">💡 点击图表查看该地企业</div>
+        </div>
+        <div class="detail-panel" id="locationDetailPanel">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:2px 0 4px">
+            <span style="font-size:.68rem;font-weight:600" id="locationDetailTitle"></span>
+            <span class="detail-back" id="locationDetailBack">← 返回</span>
+          </div>
+          <div class="detail-list" id="locationDetailList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- [area: nature] 公司性质分布 (left bottom right) -->
+    <div class="panel panel-nature">
+      <div class="panel-header">
+        <div class="panel-title"><span class="panel-dot" style="background:var(--w)"></span>公司性质分布</div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <span style="font-size:.58rem;color:var(--txt3)" id="natureTotal"></span>
+          <div class="chart-toggle" id="natureChartToggle">
+            <button class="chart-toggle-btn active" data-type="pie">饼图</button>
+            <button class="chart-toggle-btn" data-type="bar">柱状</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="chart-panel" id="natureChartPanel">
+          <div class="dist-chart" id="natureChart"></div>
+          <div style="font-size:.55rem;color:var(--txt3);text-align:center;padding:1px 0">💡 点击图表查看该类型企业</div>
+        </div>
+        <div class="detail-panel" id="natureDetailPanel">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:2px 0 4px">
+            <span style="font-size:.68rem;font-weight:600" id="natureDetailTitle"></span>
+            <span class="detail-back" id="natureDetailBack">← 返回</span>
+          </div>
+          <div class="detail-list" id="natureDetailList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- [area: industry] 公司行业分布 (left top, spans 2 rows) -->
+    <div class="panel panel-industry">
+      <div class="panel-header">
+        <div class="panel-title"><span class="panel-dot" style="background:var(--w)"></span>公司行业分布</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:.62rem;color:var(--txt3)" id="industryTotal"></span>
+          <div class="chart-toggle" id="chartTypeToggle">
+            <button class="chart-toggle-btn active" data-type="pie">饼图</button>
+            <button class="chart-toggle-btn" data-type="bar">柱状</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="industry-chart-panel" id="industryChartPanel">
+          <div class="industry-chart" id="industryChart"></div>
+          <div style="font-size:.58rem;color:var(--txt3);text-align:center;padding:2px 0">💡 点击图表查看行业企业详情</div>
+        </div>
+        <div class="industry-detail-panel" id="industryDetailPanel">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:2px 0 4px">
+            <span style="font-size:.7rem;font-weight:600" id="detailTitle"></span>
+            <span class="detail-back" id="detailBack">← 返回图表</span>
+          </div>
+          <div class="detail-list" id="detailList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== DATA =====================
+const SN='张李王陈刘杨黄赵周吴徐孙马朱胡林郭何高罗郑梁谢宋唐许韩冯邓曹'.split('');
+const GN='伟芳敏静丽强磊洋勇艳杰娟涛明超秀英华慧鑫桂英建华丽兰萍红梅军峰斌文博雪雨桐子轩宇轩一诺欣怡梓涵奕辰思源乐天'.split('');
+function rn(){return SN[Math.floor(Math.random()*SN.length)]+GN[Math.floor(Math.random()*GN.length)]}
+function ac(n){const c=['#6366f1','#8b5cf6','#06b6d4','#10b981','#f59e0b','#ef4444','#ec4899','#14b8a6','#f97316','#84cc16','#3b82f6','#a855f7'];let h=0;for(let i=0;i<n.length;i++)h=n.charCodeAt(i)+((h<<5)-h);return c[Math.abs(h)%c.length]}
+
+const D={
+  fair:{id:17,name:'2026年链接未来春季综合双选招聘会',date:'2026-06-22',location:'新微西部（成都）创新中心',totalJobFairs:8,totalCompanies:156,totalPositions:2847,totalRecruits:5320,totalAttendees:2340,totalAppointments:892,checkinRate:72.5},
+  schools:[
+    {name:'浙江大学',count:385},{name:'杭州电子科技大学',count:312},{name:'浙江工业大学',count:278},
+    {name:'浙江理工大学',count:245},{name:'中国计量大学',count:198},{name:'浙江工商大学',count:187},
+    {name:'杭州师范大学',count:165},{name:'浙江财经大学',count:142},{name:'浙江中医药大学',count:128},
+    {name:'温州大学',count:105},{name:'宁波大学',count:95},{name:'嘉兴学院',count:68},
+    {name:'湖州师范学院',count:52},{name:'绍兴文理学院',count:38},{name:'台州学院',count:22}
+  ],
+  majors:[
+    {name:'计算机科学与技术',count:342},{name:'软件工程',count:298},{name:'电子信息工程',count:256},
+    {name:'通信工程',count:218},{name:'自动化',count:195},{name:'机械工程',count:178},
+    {name:'会计学',count:165},{name:'金融学',count:152},{name:'市场营销',count:138},
+    {name:'工商管理',count:125},{name:'英语',count:98},{name:'法学',count:72},
+    {name:'数学与应用数学',count:65},{name:'生物工程',count:48},{name:'环境工程',count:35}
+  ],
+  locations:[
+    {name:'成都',count:45},{name:'北京',count:28},{name:'上海',count:25},
+    {name:'深圳',count:18},{name:'杭州',count:16},{name:'广州',count:12},
+    {name:'南京',count:7},{name:'武汉',count:5}
+  ],
+  companyTypes:[
+    {name:'民营企业',count:68,color:'#6366f1'},{name:'国有企业',count:32,color:'#f59e0b'},
+    {name:'外资企业',count:26,color:'#06b6d4'},{name:'合资企业',count:18,color:'#10b981'},
+    {name:'上市公司',count:12,color:'#ef4444'}
+  ],
+  industries:[
+    {name:'互联网/IT',count:42,color:'#6366f1',cos:['阿里巴巴','字节跳动','腾讯','美团','京东','网易','百度','小米','华为','中兴','海康威视','大华股份','滴滴','快手','哔哩哔哩','拼多多','蔚来','理想汽车','小鹏汽车','商汤科技','科大讯飞','深信服','奇安信','小红书','米哈游','得物App','Soul','知乎','Keep','阅文集团','喜马拉雅','BOSS直聘','猎聘','拉勾网','美图','大疆创新','旷视科技','依图科技','云从科技','地平线','寒武纪']},
+    {name:'金融/保险',count:28,color:'#8b5cf6',cos:['工商银行','建设银行','农业银行','中国银行','招商银行','平安集团','中信证券','华泰证券','蚂蚁集团','微众银行','宁波银行','泰康保险','中国人寿','太平洋保险','中金公司','国泰君安','海通证券','广发证券','兴业证券','东方财富','同花顺','恒生电子','众安保险','阳光保险','大地保险','新华保险','太平保险','陆金所']},
+    {name:'制造业',count:22,color:'#06b6d4',cos:['三一重工','中联重科','吉利汽车','比亚迪','格力电器','美的集团','海尔集团','TCL集团','京东方','宁德时代','海天精工','徐工集团','柳工','潍柴动力','中车集团','中国船舶','上海电气','东方电气','正泰电器','汇川技术','先导智能','拓斯达']},
+    {name:'教育/培训',count:18,color:'#10b981',cos:['新东方','好未来','学而思','中公教育','华图教育','猿辅导','作业帮','高途','网易有道','VIPKID','掌门教育','火花思维','美术宝','编程猫','小码王','核桃编程','达内教育','传智教育']},
+    {name:'医疗/健康',count:14,color:'#f59e0b',cos:['迈瑞医疗','药明康德','恒瑞医药','百济神州','联影医疗','华大基因','爱尔眼科','通策医疗','美年健康','爱康国宾','微医','丁香园','好大夫在线','医联']},
+    {name:'房地产/建筑',count:10,color:'#ef4444',cos:['万科','碧桂园','龙湖集团','华润置地','保利发展','绿城中国','中海地产','招商蛇口','金地集团','中国建筑']},
+    {name:'传媒/广告',count:8,color:'#ec4899',cos:['分众传媒','蓝色光标','奥美广告','华扬联众','省广集团','引力传媒','因赛集团','天下秀']},
+    {name:'零售/电商',count:7,color:'#14b8a6',cos:['淘宝天猫','京东零售','唯品会','得物App','苏宁易购','永辉超市','名创优品']},
+    {name:'物流/运输',count:5,color:'#f97316',cos:['顺丰速运','中通快递','圆通速递','德邦物流','菜鸟网络']},
+    {name:'能源/环保',count:2,color:'#84cc16',cos:['国家电网','三峡集团']}
+  ],
+  companies:[],checkins:[]
+};
+
+// Generate
+!function(){let i=1;const locs=D.locations.map(l=>l.name),types=D.companyTypes.map(t=>t.name);D.industries.forEach(d=>{d.cos.forEach(c=>{D.companies.push({id:i++,name:c,industry:d.name,color:d.color,booth:'A'+String(i).padStart(3,'0'),positions:Math.floor(Math.random()*18)+2,location:locs[Math.floor(Math.random()*locs.length)],type:types[Math.floor(Math.random()*types.length)]})})});D.fair.totalCompanies=D.companies.length;D.fair.totalPositions=D.companies.reduce((s,c)=>s+c.positions,0);
+  // Compute location and type counts + company lists from actual assignments
+  D.locations.forEach(l=>{l.cos=D.companies.filter(c=>c.location===l.name).map(c=>c.name);l.count=l.cos.length});
+  D.companyTypes.forEach(t=>{t.cos=D.companies.filter(c=>c.type===t.name).map(c=>c.name);t.count=t.cos.length});
+}();
+!function(){const ss=D.schools.map(s=>s.name),ms=D.majors.map(m=>m.name),now=new Date('2026-06-22T14:30:00');for(let i=0;i<2340;i++){const t=new Date(now-Math.floor(Math.random()*3600000*5));D.checkins.push({id:i+1,name:rn(),school:ss[Math.floor(Math.random()*ss.length)],major:ms[Math.floor(Math.random()*ms.length)],time:t.toISOString()})}D.checkins.sort((a,b)=>new Date(b.time)-new Date(a.time))}();
+
+// ===================== HELPERS =====================
+const $=s=>document.querySelector(s),$$=s=>document.querySelectorAll(s);
+function ft(iso){return new Date(iso).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}
+// ===================== STATE =====================
+let distMode='school',distChartType='bar',distChart=null,industryChart=null,chartType='pie';
+let locationChart=null,locationChartType='pie',natureChart=null,natureChartType='pie';
+let carouselSpeed=100,companySpeed=120;
+
+// ===================== BACKGROUND =====================
+const THEMES={
+  blue:      {bg:'linear-gradient(135deg,#162240,#1e3060 30%,#1c3a70 60%,#142040)',ol:'radial-gradient(ellipse at 20% 50%,rgba(34,211,238,.10),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(56,189,248,.07),transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(167,139,250,.05),transparent 50%)'},
+  purple:    {bg:'linear-gradient(135deg,#281840,#3a2860 30%,#302870 60%,#201840)',ol:'radial-gradient(ellipse at 20% 50%,rgba(167,139,250,.12),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(192,132,252,.08),transparent 50%),radial-gradient(ellipse at 60% 80%,rgba(34,211,238,.05),transparent 50%)'},
+  emerald:   {bg:'linear-gradient(135deg,#0a2828,#104a40 30%,#0e5245 60%,#082422)',ol:'radial-gradient(ellipse at 20% 50%,rgba(52,211,153,.10),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(34,211,238,.06),transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(52,211,153,.04),transparent 50%)'},
+  midnight:  {bg:'linear-gradient(135deg,#182040,#283060 30%,#223268 60%,#162038)',ol:'radial-gradient(ellipse at 20% 50%,rgba(56,189,248,.08),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(167,139,250,.05),transparent 50%)'},
+  sunset:    {bg:'linear-gradient(135deg,#301818,#482828 30%,#422830 60%,#281818)',ol:'radial-gradient(ellipse at 20% 50%,rgba(251,146,60,.08),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(239,68,68,.05),transparent 50%)'},
+  ocean:     {bg:'linear-gradient(135deg,#142840,#1e3a60 30%,#183258 60%,#102238)',ol:'radial-gradient(ellipse at 20% 50%,rgba(34,211,238,.12),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(56,189,248,.07),transparent 50%)'},
+  forest:    {bg:'linear-gradient(135deg,#0e2218,#1a3a28 30%,#163222 60%,#0c1e14)',ol:'radial-gradient(ellipse at 20% 50%,rgba(52,211,153,.08),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(34,211,238,.04),transparent 50%)'},
+  slate:     {bg:'linear-gradient(135deg,#1c2038,#2e3250 30%,#262a44 60%,#181c30)',ol:'radial-gradient(ellipse at 20% 50%,rgba(148,163,184,.06),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(203,213,225,.04),transparent 50%)'}
+};
+let currentTheme='blue';
+
+function applyTheme(theme){
+  const t=THEMES[theme];if(!t)return;
+  currentTheme=theme;
+  document.body.style.background=t.bg;
+  document.body.style.setProperty('--bg',t.bg);
+  document.body.style.setProperty('--ol',t.ol);
+  // Update palette active state
+  $$('.bg-palette-color[data-theme]').forEach(el=>el.classList.toggle('active',el.dataset.theme===theme));
+  // Update toggle button color
+  const sample=t.bg.match(/#[0-9a-fA-F]{6}/g);
+  if(sample&&sample.length>=2)$('#bgToggle').style.background=`linear-gradient(135deg,${sample[0]},${sample[1]})`;
+}
+function applyCustomColor(hex){
+  // Generate a gradient based on the chosen color
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  const dark=`#${Math.floor(r*.15).toString(16).padStart(2,'0')}${Math.floor(g*.15).toString(16).padStart(2,'0')}${Math.floor(b*.25).toString(16).padStart(2,'0')}`;
+  const mid=`#${Math.floor(r*.25).toString(16).padStart(2,'0')}${Math.floor(g*.25).toString(16).padStart(2,'0')}${Math.floor(b*.45).toString(16).padStart(2,'0')}`;
+  const light=`#${Math.floor(r*.18).toString(16).padStart(2,'0')}${Math.floor(g*.18).toString(16).padStart(2,'0')}${Math.floor(b*.35).toString(16).padStart(2,'0')}`;
+  const base=`#${Math.floor(r*.10).toString(16).padStart(2,'0')}${Math.floor(g*.10).toString(16).padStart(2,'0')}${Math.floor(b*.18).toString(16).padStart(2,'0')}`;
+  currentTheme='custom';
+  document.body.style.background=`linear-gradient(135deg,${dark},${mid} 30%,${light} 60%,${base})`;
+  document.body.style.setProperty('--bg',document.body.style.background);
+  document.body.style.setProperty('--ol',`radial-gradient(ellipse at 20% 50%,rgba(${r},${g},${b},.10),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(${r},${g},${b},.06),transparent 50%)`);
+  $$('.bg-palette-color[data-theme]').forEach(el=>el.classList.remove('active'));
+  $('#bgToggle').style.background=`linear-gradient(135deg,${hex},${mid})`;
+}
+
+// Palette event binding (called from init after DOM ready)
+function bindPaletteEvents(){
+  $('#bgToggle').addEventListener('click',function(e){e.stopPropagation();
+    const pal=$('#bgPalette'),isOpen=pal.classList.toggle('show');
+    if(isOpen){const r=this.getBoundingClientRect();pal.style.top=(r.bottom+4)+'px';pal.style.left=Math.min(r.left,window.innerWidth-180)+'px'}
+  });
+  document.addEventListener('click',function(e){if(!e.target.closest('.bg-ctrl'))$('#bgPalette').classList.remove('show')});
+  $('#bgPalette').addEventListener('click',function(e){
+    const colorEl=e.target.closest('.bg-palette-color[data-theme]');
+    if(colorEl){applyTheme(colorEl.dataset.theme);$('#bgPalette').classList.remove('show');return}
+    const resetEl=e.target.closest('#bgReset');
+    if(resetEl){applyTheme('blue');$('#bgPalette').classList.remove('show');return}
+  });
+  $('#bgCustomColor').addEventListener('input',function(){applyCustomColor(this.value)});
+  $('#bgCustomColor').addEventListener('click',function(e){e.stopPropagation()});
+}
+
+// ===================== SPEED =====================
+function setCarouselSpeed(v){carouselSpeed=v;$('#carouselSpeed').value=v;$('#carouselSpeedVal').textContent=v+'s';document.documentElement.style.setProperty('--carousel-speed',v+'s')}
+function setCompanySpeed(v){companySpeed=v;$('#companySpeed').value=v;$('#companySpeedVal').textContent=v+'s';document.documentElement.style.setProperty('--company-speed',v+'s')}
+$('#carouselSpeed').addEventListener('input',function(){setCarouselSpeed(parseInt(this.value))});
+$('#companySpeed').addEventListener('input',function(){setCompanySpeed(parseInt(this.value))});
+setCarouselSpeed(100);setCompanySpeed(120);
+
+// ===================== RENDER =====================
+function renderStats(){
+  const d=D.fair;
+  $('#statPositions').textContent=d.totalPositions.toLocaleString();
+  $('#statRecruits').textContent=d.totalRecruits.toLocaleString();
+  $('#statCompanies').textContent=d.totalCompanies;
+  $('#fairName').textContent=d.name;
+  $('#fairInfo').textContent=d.date+' · '+d.location;
+  $('#attendeeCount').textContent=d.totalAttendees.toLocaleString();
+  $('#updateTime').textContent=new Date().toLocaleTimeString('zh-CN');
+  $('#companyCount').textContent='('+d.totalCompanies+'家)';
+}
+
+function renderDistChart(){
+  const c=$('#distChart');if(!distChart)distChart=echarts.init(c);
+  const data=distMode==='school'?D.schools:D.majors;
+  const sorted=[...data].sort((a,b)=>b.count-a.count);
+  const colors=['#6366f1','#8b5cf6','#06b6d4','#10b981','#f59e0b','#ef4444','#ec4899','#14b8a6','#f97316','#84cc16','#3b82f6','#a855f7','#e11d48','#65a30d','#d946ef'];
+  if(distChartType==='bar'){
+    distChart.setOption({
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'rgba(15,23,42,.92)',borderColor:'rgba(255,255,255,.1)',textStyle:{color:'#fff',fontSize:11}},
+      grid:{left:'2%',right:'5%',top:'1%',bottom:'1%',containLabel:true},
+      xAxis:{type:'value',axisLine:{show:false},axisTick:{show:false},splitLine:{lineStyle:{color:'rgba(255,255,255,.04)'}},axisLabel:{color:'rgba(255,255,255,.4)',fontSize:9}},
+      yAxis:{type:'category',data:sorted.map(d=>d.name).reverse(),axisLine:{show:false},axisTick:{show:false},axisLabel:{color:'rgba(255,255,255,.6)',fontSize:10,width:100,overflow:'truncate'}},
+      series:[{type:'bar',data:sorted.map((d,i)=>({value:d.count,itemStyle:{color:colors[colors.length-1-i%colors.length],borderRadius:[0,4,4,0]}})).reverse(),barWidth:12,label:{show:true,position:'right',color:'rgba(255,255,255,.45)',fontSize:9}}]
+    },true);
+  }else{
+    distChart.setOption({
+      tooltip:{trigger:'item',backgroundColor:'rgba(15,23,42,.92)',borderColor:'rgba(255,255,255,.1)',textStyle:{color:'#fff',fontSize:11},formatter:'{b}: {c}人 ({d}%)'},
+      series:[{type:'pie',radius:['40%','72%'],center:['50%','50%'],padAngle:2,itemStyle:{borderRadius:4,borderColor:'rgba(0,0,0,.3)',borderWidth:2},label:{show:true,formatter:'{b}\n{d}%',color:'rgba(255,255,255,.7)',fontSize:9,lineHeight:13},labelLine:{lineStyle:{color:'rgba(255,255,255,.2)'}},emphasis:{label:{fontSize:12,fontWeight:'bold'},scaleSize:8},data:sorted.map((d,i)=>({name:d.name,value:d.count,itemStyle:{color:colors[i%colors.length]}}))}]
+    },true);
+  }
+}
+
+function renderIndustryChart(){
+  const c=$('#industryChart');if(!industryChart)industryChart=echarts.init(c);
+  $('#industryTotal').textContent=D.industries.length+'个行业';
+  if(chartType==='pie'){
+    industryChart.setOption({
+      tooltip:{trigger:'item',backgroundColor:'rgba(15,23,42,.92)',borderColor:'rgba(255,255,255,.1)',textStyle:{color:'#fff',fontSize:11},formatter:'{b}: {c}家 ({d}%)'},
+      series:[{type:'pie',radius:['45%','75%'],center:['50%','50%'],padAngle:2,itemStyle:{borderRadius:5,borderColor:'rgba(0,0,0,.3)',borderWidth:2},label:{show:true,formatter:'{b}\n{d}%',color:'rgba(255,255,255,.7)',fontSize:9,lineHeight:13},labelLine:{lineStyle:{color:'rgba(255,255,255,.2)'}},emphasis:{label:{fontSize:13,fontWeight:'bold'},scaleSize:10},data:D.industries.map(d=>({name:d.name,value:d.count,itemStyle:{color:d.color}}))}]
+    },true);
+  }else{
+    const sorted=[...D.industries].sort((a,b)=>b.count-a.count);
+    industryChart.setOption({
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'rgba(15,23,42,.92)',borderColor:'rgba(255,255,255,.1)',textStyle:{color:'#fff',fontSize:11}},
+      grid:{left:'2%',right:'5%',top:'2%',bottom:'2%',containLabel:true},
+      xAxis:{type:'value',axisLine:{show:false},axisTick:{show:false},splitLine:{lineStyle:{color:'rgba(255,255,255,.04)'}},axisLabel:{color:'rgba(255,255,255,.4)',fontSize:9}},
+      yAxis:{type:'category',data:sorted.map(d=>d.name).reverse(),axisLine:{show:false},axisTick:{show:false},axisLabel:{color:'rgba(255,255,255,.6)',fontSize:9}},
+      series:[{type:'bar',data:sorted.map(d=>({value:d.count,itemStyle:{color:d.color,borderRadius:[0,4,4,0]}})).reverse(),barWidth:12,label:{show:true,position:'right',color:'rgba(255,255,255,.45)',fontSize:9}}]
+    },true);
+  }
+  industryChart.off('click');
+  industryChart.on('click',function(params){
+    const ind=D.industries.find(d=>d.name===params.name);if(!ind)return;
+    $('#industryChartPanel').classList.add('hide');
+    $('#industryDetailPanel').classList.add('show');
+    $('#detailTitle').textContent=ind.name+' · '+ind.count+'家企业';
+    $('#detailList').innerHTML=ind.cos.map(c=>{const co=D.companies.find(x=>x.name===c&&x.industry===ind.name);return `<div class="detail-item"><span class="detail-dot" style="background:${ind.color}"></span><span class="detail-name">${c}</span><span class="detail-booth">${co?co.booth:'--'}</span></div>`}).join('');
+  });
+}
+$('#detailBack').addEventListener('click',function(){$('#industryChartPanel').classList.remove('hide');$('#industryDetailPanel').classList.remove('show')});
+$('#locationDetailBack').addEventListener('click',function(){$('#locationChartPanel').classList.remove('hide');$('#locationDetailPanel').classList.remove('show')});
+$('#natureDetailBack').addEventListener('click',function(){$('#natureChartPanel').classList.remove('hide');$('#natureDetailPanel').classList.remove('show')});
+$('#chartTypeToggle').addEventListener('click',function(e){const btn=e.target.closest('.chart-toggle-btn');if(!btn)return;$$('#chartTypeToggle .chart-toggle-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');chartType=btn.dataset.type;renderIndustryChart()});
+
+function renderLocationChart(){
+  const c=$('#locationChart');if(!locationChart)locationChart=echarts.init(c);
+  const data=D.locations,sorted=[...data].sort((a,b)=>b.count-a.count);
+  $('#locationTotal').textContent=sorted.length+'个城市';
+  const colors=['#6366f1','#8b5cf6','#06b6d4','#10b981','#f59e0b','#ef4444','#ec4899','#f97316'];
+  if(locationChartType==='bar'){
+    locationChart.setOption({
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'rgba(15,23,42,.92)',borderColor:'rgba(255,255,255,.1)',textStyle:{color:'#fff',fontSize:10}},
+      grid:{left:'2%',right:'5%',top:'1%',bottom:'1%',containLabel:true},
+      xAxis:{type:'value',axisLine:{show:false},axisTick:{show:false},splitLine:{lineStyle:{color:'rgba(255,255,255,.04)'}},axisLabel:{color:'rgba(255,255,255,.4)',fontSize:8}},
+      yAxis:{type:'category',data:sorted.map(d=>d.name).reverse(),axisLine:{show:false},axisTick:{show:false},axisLabel:{color:'rgba(255,255,255,.6)',fontSize:9}},
+      series:[{type:'bar',data:sorted.map((d,i)=>({value:d.count,itemStyle:{color:colors[colors.length-1-i%colors.length],borderRadius:[0,3,3,0]}})).reverse(),barWidth:10,label:{show:true,position:'right',color:'rgba(255,255,255,.4)',fontSize:8}}]
+    },true);
+  }else{
+    locationChart.setOption({
+      tooltip:{trigger:'item',backgroundColor:'rgba(15,23,42,.92)',borderColor:'rgba(255,255,255,.1)',textStyle:{color:'#fff',fontSize:10},formatter:'{b}: {c}家 ({d}%)'},
+      series:[{type:'pie',radius:['42%','70%'],center:['50%','50%'],padAngle:2,itemStyle:{borderRadius:4,borderColor:'rgba(0,0,0,.3)',borderWidth:2},label:{show:true,formatter:'{b}\n{d}%',color:'rgba(255,255,255,.7)',fontSize:9,lineHeight:13},labelLine:{lineStyle:{color:'rgba(255,255,255,.2)'}},emphasis:{label:{fontSize:11,fontWeight:'bold'},scaleSize:6},data:sorted.map((d,i)=>({name:d.name,value:d.count,itemStyle:{color:colors[i%colors.length]}}))}]
+    },true);
+  }
+  locationChart.off('click');
+  locationChart.on('click',function(params){
+    const loc=D.locations.find(l=>l.name===params.name);if(!loc)return;
+    $('#locationChartPanel').classList.add('hide');
+    $('#locationDetailPanel').classList.add('show');
+    $('#locationDetailTitle').textContent=loc.name+' · '+loc.count+'家企业';
+    $('#locationDetailList').innerHTML=loc.cos.map(name=>{
+      const co=D.companies.find(c=>c.name===name&&c.location===loc.name);
+      return `<div class="detail-item"><span class="detail-dot" style="background:${co?co.color:'#6366f1'}"></span><span class="detail-name">${name}</span><span class="detail-booth">${co?co.booth:'--'}</span></div>`;
+    }).join('');
+  });
+}
+
+function renderNatureChart(){
+  const c=$('#natureChart');if(!natureChart)natureChart=echarts.init(c);
+  const data=D.companyTypes,sorted=[...data].sort((a,b)=>b.count-a.count);
+  $('#natureTotal').textContent=sorted.length+'种类型';
+  if(natureChartType==='bar'){
+    natureChart.setOption({
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'},backgroundColor:'rgba(15,23,42,.92)',borderColor:'rgba(255,255,255,.1)',textStyle:{color:'#fff',fontSize:10}},
+      grid:{left:'2%',right:'5%',top:'1%',bottom:'1%',containLabel:true},
+      xAxis:{type:'value',axisLine:{show:false},axisTick:{show:false},splitLine:{lineStyle:{color:'rgba(255,255,255,.04)'}},axisLabel:{color:'rgba(255,255,255,.4)',fontSize:8}},
+      yAxis:{type:'category',data:sorted.map(d=>d.name).reverse(),axisLine:{show:false},axisTick:{show:false},axisLabel:{color:'rgba(255,255,255,.6)',fontSize:9}},
+      series:[{type:'bar',data:sorted.map(d=>({value:d.count,itemStyle:{color:d.color,borderRadius:[0,3,3,0]}})).reverse(),barWidth:10,label:{show:true,position:'right',color:'rgba(255,255,255,.4)',fontSize:8}}]
+    },true);
+  }else{
+    natureChart.setOption({
+      tooltip:{trigger:'item',backgroundColor:'rgba(15,23,42,.92)',borderColor:'rgba(255,255,255,.1)',textStyle:{color:'#fff',fontSize:10},formatter:'{b}: {c}家 ({d}%)'},
+      series:[{type:'pie',radius:['42%','70%'],center:['50%','50%'],padAngle:2,itemStyle:{borderRadius:4,borderColor:'rgba(0,0,0,.3)',borderWidth:2},label:{show:true,formatter:'{b}\n{d}%',color:'rgba(255,255,255,.7)',fontSize:9,lineHeight:13},labelLine:{lineStyle:{color:'rgba(255,255,255,.2)'}},emphasis:{label:{fontSize:11,fontWeight:'bold'},scaleSize:6},data:sorted.map(d=>({name:d.name,value:d.count,itemStyle:{color:d.color}}))}]
+    },true);
+  }
+  natureChart.off('click');
+  natureChart.on('click',function(params){
+    const typ=D.companyTypes.find(t=>t.name===params.name);if(!typ)return;
+    $('#natureChartPanel').classList.add('hide');
+    $('#natureDetailPanel').classList.add('show');
+    $('#natureDetailTitle').textContent=typ.name+' · '+typ.count+'家企业';
+    $('#natureDetailList').innerHTML=typ.cos.map(name=>{
+      const co=D.companies.find(c=>c.name===name&&c.type===typ.name);
+      return `<div class="detail-item"><span class="detail-dot" style="background:${co?co.color:'#6366f1'}"></span><span class="detail-name">${name}</span><span class="detail-booth">${co?co.booth:'--'}</span></div>`;
+    }).join('');
+  });
+}
+
+function renderCarousel(){
+  const track=$('#carouselTrack'),items=D.checkins.slice(0,100);
+  let h='';items.forEach(c=>{h+=`<div class="carousel-item"><div class="carousel-avatar" style="background:${ac(c.name)}">${c.name[0]}</div><div class="carousel-info"><div class="carousel-name">${c.name}</div><div class="carousel-detail">${c.school} · ${c.major}</div></div><div class="carousel-time">${ft(c.time)}</div></div>`});
+  track.innerHTML=h+h;
+}
+
+function renderCompanyScroll(){
+  const track=$('#companyScrollTrack');let h='';
+  D.companies.forEach(c=>{h+=`<div class="company-scroll-card"><div class="company-scroll-logo" style="background:${c.color}">${c.name[0]}</div><div class="company-scroll-info"><div class="company-scroll-name" title="${c.name}">${c.name}</div><div class="company-scroll-meta"><span>${c.industry}</span><span>${c.positions}岗位</span></div></div><div class="company-scroll-booth">${c.booth}</div></div>`});
+  track.innerHTML=h+h;
+}
+
+// ===================== EVENTS =====================
+$('#distToggle').addEventListener('click',function(e){const b=e.target.closest('.toggle-btn');if(!b)return;$$('#distToggle .toggle-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');distMode=b.dataset.mode;renderDistChart()});
+$('#distChartToggle').addEventListener('click',function(e){const b=e.target.closest('.chart-toggle-btn');if(!b)return;$$('#distChartToggle .chart-toggle-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');distChartType=b.dataset.type;renderDistChart()});
+$('#locationChartToggle').addEventListener('click',function(e){const b=e.target.closest('.chart-toggle-btn');if(!b)return;$$('#locationChartToggle .chart-toggle-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');locationChartType=b.dataset.type;renderLocationChart()});
+$('#natureChartToggle').addEventListener('click',function(e){const b=e.target.closest('.chart-toggle-btn');if(!b)return;$$('#natureChartToggle .chart-toggle-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');natureChartType=b.dataset.type;renderNatureChart()});
+window.addEventListener('resize',()=>{distChart?.resize();industryChart?.resize();locationChart?.resize();natureChart?.resize()});
+
+// ===================== SIMULATE =====================
+function sim(){
+  const ss=D.schools.map(s=>s.name),ms=D.majors.map(m=>m.name);
+  const nc={id:D.checkins.length+1,name:rn(),school:ss[Math.floor(Math.random()*ss.length)],major:ms[Math.floor(Math.random()*ms.length)],time:new Date().toISOString()};
+  D.checkins.unshift(nc);D.fair.totalAttendees++;D.fair.checkinRate=Math.min(99.9,+(D.fair.totalAttendees/(D.fair.totalAttendees+900)*100).toFixed(1));
+  const s=D.schools.find(x=>x.name===nc.school);if(s)s.count++;const m=D.majors.find(x=>x.name===nc.major);if(m)m.count++;
+  renderStats();renderDistChart();
+}
+function loopSim(){setTimeout(()=>{sim();loopSim()},Math.floor(Math.random()*8000)+5000)}
+
+function init(){
+  bindPaletteEvents();
+  renderStats();renderDistChart();renderIndustryChart();renderLocationChart();renderNatureChart();renderCarousel();renderCompanyScroll();
+  loopSim();setInterval(()=>{$('#updateTime').textContent=new Date().toLocaleTimeString('zh-CN')},1000);setInterval(renderCarousel,30000);
+}
+document.addEventListener('DOMContentLoaded',init);
+</script>
+
+<!-- Background palette (body-level to avoid stacking context clipping) -->
+<div class="bg-palette" id="bgPalette">
+  <span class="bg-palette-color" data-theme="blue" style="background:linear-gradient(135deg,#1e3060,#2563eb)" title="深蓝"></span>
+  <span class="bg-palette-color" data-theme="purple" style="background:linear-gradient(135deg,#3a2860,#7c3aed)" title="极光紫"></span>
+  <span class="bg-palette-color" data-theme="emerald" style="background:linear-gradient(135deg,#104a40,#10b981)" title="翡翠绿"></span>
+  <span class="bg-palette-color" data-theme="midnight" style="background:linear-gradient(135deg,#283060,#6366f1)" title="午夜"></span>
+  <span class="bg-palette-color" data-theme="sunset" style="background:linear-gradient(135deg,#482828,#f97316)" title="日落"></span>
+  <span class="bg-palette-color" data-theme="ocean" style="background:linear-gradient(135deg,#1e3a60,#06b6d4)" title="海洋"></span>
+  <span class="bg-palette-color" data-theme="forest" style="background:linear-gradient(135deg,#1a3a28,#22c55e)" title="森林"></span>
+  <span class="bg-palette-color" data-theme="slate" style="background:linear-gradient(135deg,#2e3250,#94a3b8)" title="石板灰"></span>
+  <label class="bg-palette-color" style="background:#333;display:flex;align-items:center;justify-content:center;position:relative" title="自定义颜色">
+    <span style="font-size:10px">+</span>
+    <input type="color" class="bg-custom-input" id="bgCustomColor" value="#6366f1">
+  </label>
+  <span class="bg-remove" id="bgReset">重置默认</span>
+</div>
+</body>
+</html>
