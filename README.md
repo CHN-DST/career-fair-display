@@ -45,7 +45,7 @@
 
 ```bash
 # 克隆仓库
-git clone https://github.com/YOUR_USERNAME/career-fair-display.git
+git clone https://github.com/CHN-DST/career-fair-display.git
 cd career-fair-display
 
 # 启动服务
